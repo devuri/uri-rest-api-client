@@ -14,7 +14,7 @@ if (!function_exists('add_action') || !defined('ABSPATH')) {
    exit;
 }
 // -------------------------------------------------------------
-// Import plugin-related files
+// Import plugin class and settings files
 // -------------------------------------------------------------
 // Import primary plugin class file
 if(!class_exists('UriRestApiClient')){
