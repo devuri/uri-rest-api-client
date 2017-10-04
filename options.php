@@ -93,22 +93,23 @@ function uraclient_settings_init() {
 	   </div>
       <h1>URI REST API Client</h1>
       <form method="post" action="options.php">
-         <?php 
-            settings_fields( 'uraclient_options' );
-            do_settings_sections( 'uraclient_basic_settings' );
-            submit_button();
-         ?>
+         <?php settings_fields( 'uraclient_options' );
+               do_settings_sections( 'uraclient_basic_settings' ); ?>
+     <!--    <button type="button" name="test_settings" id="test_settings" class="button button-primary" style="margin-top:10px;">Test Settings</button>  -->
+         <?php submit_button(); ?>
       </form>
       <hr>
-      <table>
+      <table style="padding-bottom:20px;">
          <tr>
            	<td>
-               <strong>Example Shortcode Syntax for Wordpress Pages and Posts:</strong>
-               <p>
+               <h2>Example Shortcode Syntax for Wordpress Pages and Posts:</h2>
+               <p>To display course data on one of your pages, simply copy and paste the code shown below into any WordPress Page or Post, and the information will appear automatically.</p>
+               <p></p>
                <strong>[uraclient]</strong>
             </td>
          </tr>
       </table>
+      <hr>
    </div>
 <?php
 }

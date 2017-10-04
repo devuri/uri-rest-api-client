@@ -12,6 +12,7 @@ class UriRestApiClient {
 
    private $feedData;   // String with JSON feed data
    private $decodedData;   // String with data after json_decode
+   private $finalResult;   // String with HTML formatted data
 
    // ---------------------------------------------------------------
    // Define shortcode syntax
@@ -35,31 +36,34 @@ class UriRestApiClient {
       // Include wp_safe_remote_get file
       require_once plugin_dir_path( __FILE__ ) . '/class-json-get.php';
       // Call function to create connection
+      //echo 'URL: ' . $this->feedUrl . '<br/>Client ID: ' . $this->clientId . '<br/>';   // For debugging
       $jsonGetObj = new JsonGet($this->feedUrl, $this->clientId);
       // Retreive JSON feed from URL
       if ($jsonGetObj->getFeed()) {
          // Store JSON feed data locally
          $this->feedData = $jsonGetObj->getFeedData();
+         //var_dump($this->feedData);   // For debugging
       } else {
          return;   // Error will be thrown by getFeed() if there is one
       }
          
       // ---------------------------------------------------------------
-      // Convert JSON feed to array/object
+      // Convert JSON feed to object (or optionally, array)
       // ---------------------------------------------------------------
       // Include json_decode file
       require_once plugin_dir_path( __FILE__ ) . '/class-json-decode.php';
 		// Instantiate JSON feed conversion object
       $jsonDecodeObj = new JsonDecode($this->feedData);
-      // Convert JSON feed to PHP String array
+      // Convert JSON feed to PHP Object
       if ($jsonDecodeObj->decodeFeedData()) {
          $this->decodedData = $jsonDecodeObj->getDecodedData();
       } else {
          return;   // Error will be thrown by decodeFeedData() if there is one
       }
+      //var_dump($this->decodedData);   // For debugging
 
       // ---------------------------------------------------------------
-      // Parse and format array data for display
+      // Parse and format data object for display
       // ---------------------------------------------------------------
       // Include JSON parsing file
       require_once plugin_dir_path( __FILE__ ) . '/class-decoded-json-2-html.php';
@@ -67,9 +71,9 @@ class UriRestApiClient {
       $decodedJson2HtmlObj = new DecodedJson2Html($this->decodedData);
       // Return raw HTML for WordPress Page/Post import
       if ($decodedJson2HtmlObj->data2Html()) {
-         $this->decodedData = $jsonDecodeObj->getResult();
+         $this->finalResult = $decodedJson2HtmlObj->getResult();
          // Output data as an HTML Table
-         return $this->decodedData;
+         return $this->finalResult;
       } else {
          return;   // Error will be thrown by data2Html() if there is one
       }  

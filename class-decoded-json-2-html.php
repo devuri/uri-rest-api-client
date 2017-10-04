@@ -20,22 +20,22 @@ class DecodedJson2Html {
    }
 
    private function parseData($data) {
-      $result = "";
+      $output = "";
 
       // Check for failed decode
       if(!empty($data)) {
          // Build HTML table for shortcode output
-   	   $result .= '<table><th>Course</th><th>Title></th><th>Description</th>';
+   	   $output .= '<table><th>Course</th><th>Title</th><th>Description</th>';
 	      foreach($data as $course) {
-		      $result .= '<tr>';
-            $result .= '<td>' . $course->dept . ' ' . $course->num . '</td>';
-            $result .= '<td>' . $course->title . '</td>';
-			   $result .= '<td>' . $course->descr . '</td>';
-		      $result .= '</tr>';
+		      $output .= '<tr>';
+            $output .= '<td>' . $course->Subject . ' ' . $course->Catalog . '</td>';
+            $output .= '<td>' . $course->Long_Title . '</td>';
+			   $output .= '<td>' . $course->Descr . '</td>';
+		      $output .= '</tr>';
 	      }
-	      $result .= '</table>';
+	      $output .= '</table>';
       }
-      return $result;
+      return $output;
    }
 
    // Get JSON data, build html
@@ -44,12 +44,13 @@ class DecodedJson2Html {
             
       # Check that the data is an object or array
       if (!is_object($structure) && !is_array($structure)) {
-        echo "Problems with data structure: not an array or object.";
-        return FALSE;
+         echo "Problems with data structure: not an array or object.<br/><br/>";
+         //var_dump($structure);   // For debugging
+         return FALSE;
       } else {
          # Parse the data
-         $result = $this->parseData($structure);
-         $this->result = trim($result);
+         $out = $this->parseData($structure);
+         $this->result = trim($out);
          return TRUE;
       }
 	}

@@ -7,8 +7,8 @@ Author: Heath Loder
 */
 
 class JsonDecode {
-   private $jsonData = "";
    private $feedData = "";
+   private $decodedData = "";
 
    // Constructor
    public function __construct($feedData) {
@@ -23,12 +23,12 @@ class JsonDecode {
          echo "<p>Empty feed.</p>";
          return FALSE;
       } else {
-	      $this->jsonData =  json_decode($this->feedData);
+	      $this->decodedData =  json_decode($this->feedData);
          // Check for encoding issues and give it one more shot
-         if (is_null($this->jsonData)) {
+         if (is_null($this->decodedData)) {
             // utf8_encode JSON data, then try json_decode again
-    	      $this->jsonData =  json_decode(utf8_encode($this->feedData));
-            if (is_null($this->jsonData)) {
+    	      $this->decodedData =  json_decode(utf8_encode($this->feedData));
+            if (is_null($this->decodedData)) {
                echo "<p>Decoding failed.</p>";
                return FALSE;   // Check data structure and encoding
             }

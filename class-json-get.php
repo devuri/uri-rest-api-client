@@ -10,17 +10,18 @@ Author: Heath Loder
 // Class for retrieving a json feed using WordPress functions
 // -------------------------------------------------------------
 class JsonGet {
-   private $feedUrl = "";
-   private $feedData = "";
+   private $feedUrl;
    private $clientId;
+   private $feedData;
 
    // Constructor
-   public function __construct($feed_url, $client_id){
+   public function __construct($feed_url, $client_id) {
       if ( empty($feed_url) || empty($client_id) )
-         echo "There was an error with the URI REST API Client Plugin: No Client ID supplied.";
-      else
-      $this->feedUrl = $feed_url;
-      $this->clientID = $client_id ;
+         echo "No Client ID supplied.";
+      else {
+         $this->feedUrl = $feed_url;
+         $this->clientId = $client_id ;
+      }
    }
 
    // Accessor for feed data
@@ -37,24 +38,16 @@ class JsonGet {
       $this->feedUrl = preg_replace("/&#038;/", "&", $this->feedUrl);
       $this->feedUrl = str_replace('&amp;', '&', $this->feedUrl);
       //$useragent = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:35.0) Gecko/20100101 Firefox/35.0"; # in case of simulating a browser
+      // So api.uri.edu can easily figure out who we are
       $useragent = 'URI REST API WordPress Plugin; ' . get_bloginfo('url');
       if (!empty($this->clientId)) {
-         $args = array(
-            //'timeout'     => 5,
-            //'httpversion' => '1.0',
-            'user-agent'  => $useragent,   // So api.uri.edu can easily figure out who we are
-            //'blocking'    => true,
-            'headers'     => array('id' => $this->clientId),   // Set ClientID in header here
-            //'cookies'     => array(),
-            //'body'        => null,
-            //'compress'    => false,
-            //'decompress'  => true,
-            //'sslverify'   => true,
-            //'stream'      => false,
-            //'filename'    => null
-         );
+         // Set ClientID in header here
+         $args = [
+            'user-agent'  => $useragent,
+            'headers'     => [ "id" => $this->clientId ]
+         ];
       }
-      
+      //echo "Headers sent: " . $args["headers"]["id"];   // For debugging
       // -------------------------------------------------------------
       // Get the JSON feed
       // -------------------------------------------------------------
@@ -64,10 +57,17 @@ class JsonGet {
          echo "There was an error with the URI REST API Client Plugin: $error_message";
          return FALSE;
       } else if (isset($response['body']) && !empty($response['body'])) {
-         $this->feedData = $response['body'];
+         // Check for non-200 code responses here
+         if ( wp_remote_retrieve_response_code($response) != '200' ) {
+            //var_dump($this->feedData);   // For debugging
+            echo "$response";
+            return FALSE;
+         }
+         //$this->feedData = $response['body'];   // Deprecated
+         $this->feedData = wp_remote_retrieve_body($response);
          return TRUE;
       } else {
-         echo "There was an error with the URI REST API Client Plugin: empty response from server?";
+         echo "Empty response from server?";
          return FALSE;
       }
    }
