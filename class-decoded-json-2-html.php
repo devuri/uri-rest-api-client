@@ -25,7 +25,7 @@ class DecodedJson2Html {
       // Check for failed decode
       if(!empty($data)) {
          // Build HTML table for shortcode output
-   	   $output .= '<table><th style="min-width:50px;">Course</th><th style="min-width:125px;">Title</th><th>Description</th>';
+   	   $output .= '<table><th style="min-width:60px;">Course</th><th style="min-width:125px;">Title</th><th>Description</th>';
 	      foreach($data as $course) {
 	         $output .= '<tr>';
                  $output .= '<td style="text-align:center;vertical-align:middle;">' . $course->Subject . ' ' . $course->Catalog . '</td>';
